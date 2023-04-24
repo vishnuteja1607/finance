@@ -1,0 +1,55 @@
+---
+title: "Simple Stock Analysis"
+output: html_document
+date: "2023-03-15"
+---
+
+```{r}
+#install packages
+
+library(quantmod)
+install.packages('tidyquant')
+library(tidyquant)
+```
+
+```{r}
+#get telsa stock prices
+
+tsla <- getSymbols('TSLA',from='2021-03-01',to='2023-03-01',auto.assign=F)
+colnames(tsla) <- c("open","high","low","close","volume","adjusted")
+```
+
+
+```{r}
+#some plotting
+
+plot(tsla[,'adjusted'],type='l')
+```
+
+```{r}
+#calculating 3 types of returns
+
+#chart_Series(tsla['2022-07/2022-10'])
+
+#simple returns
+
+simple_returns <- na.omit(diff(tsla$adjusted)/lag(tsla$adjusted))
+#head(simple_returns)
+#cumulative
+cumulative_returns = na.omit(cumprod(1+simple_returns))
+#head(cumulative_returns)
+
+#log differences
+
+log_returns <- na.omit(diff(log(tsla$adjusted)))
+head(log_returns)
+```
+
+```{r}
+
+#ploting returns
+
+plot(simple_returns,type="l")
+plot(log_returns,type="l")
+
+```
